@@ -6,7 +6,6 @@ before_install:
   - sudo service haveged start
 
 after_success:
-  - ./gradlew jacocoTestReport
   - bash <(curl -s https://codecov.io/bash)
 
 jdk:
