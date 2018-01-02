@@ -15,19 +15,25 @@
 */
 package com.adaptris.core.json.jq;
 
+import static com.adaptris.core.MetadataCollection.asMap;
+
 import java.io.Reader;
 import java.io.Writer;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.adaptris.annotation.AdapterComponent;
+import com.adaptris.annotation.AdvancedConfig;
 import com.adaptris.annotation.ComponentProfile;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.ServiceException;
 import com.adaptris.core.ServiceImp;
+import com.adaptris.core.metadata.MetadataFilter;
+import com.adaptris.core.metadata.RemoveAllMetadataFilter;
 import com.adaptris.core.util.Args;
 import com.adaptris.core.util.ExceptionHelper;
 import com.adaptris.core.util.LoggingHelper;
@@ -38,6 +44,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import net.thisptr.jackson.jq.JsonQuery;
+import net.thisptr.jackson.jq.Scope;
 
 /**
  * Transform a JSON document using JQ style syntax.
@@ -51,9 +58,15 @@ import net.thisptr.jackson.jq.JsonQuery;
 @XStreamAlias("json-jq-transform")
 public class JsonJqTransform extends ServiceImp {
 
+  private static final String SCOPE_NAME = "metadata";
+
   @NotNull
   @Valid
   private DataInputParameter<String> querySource;
+
+  @Valid
+  @AdvancedConfig
+  private MetadataFilter metadataFilter;
 
   public JsonJqTransform() {
     super();
@@ -68,7 +81,7 @@ public class JsonJqTransform extends ServiceImp {
         JsonGenerator generator = mapper.getFactory().createGenerator(w).useDefaultPrettyPrinter()) {
       JsonQuery q = JsonQuery.compile(querySource.extract(msg));
       JsonNode jsonNode = mapper.readTree(reader);
-      List<JsonNode> result = q.apply(jsonNode);
+      List<JsonNode> result = q.apply(createScope(mapper, msg), jsonNode);
       if (result.size() == 1) {
         generator.writeObject(result.get(0));
       }
@@ -113,4 +126,42 @@ public class JsonJqTransform extends ServiceImp {
     this.querySource = Args.notNull(query, "querySource");
   }
 
+  public JsonJqTransform withQuerySource(DataInputParameter<String> query) {
+    setQuerySource(query);
+    return this;
+  }
+
+  public MetadataFilter getMetadataFilter() {
+    return metadataFilter;
+  }
+
+  /**
+   * Filter metadata to pass through to your query.
+   * <p>
+   * The metadata will be passed in as a {@code Scope} object bound to {@code metadata} which allows you to reference it as
+   * {@code $metadata.myMetadataKey} within your query
+   * </p>
+   * 
+   * @param f the filter, default is {@code remove-all-metadata-filter} if not specified.
+   */
+  public void setMetadataFilter(MetadataFilter f) {
+    this.metadataFilter = f;
+  }
+
+  public JsonJqTransform withMetadataFilter(MetadataFilter f) {
+    setMetadataFilter(f);
+    return this;
+  }
+
+  private MetadataFilter metadataFilter() {
+    return getMetadataFilter() != null ? getMetadataFilter() : new RemoveAllMetadataFilter();
+  }
+
+  private Scope createScope(ObjectMapper mapper, AdaptrisMessage msg) {
+    Map<String, String> filtered = asMap(metadataFilter().filter(msg));
+    Scope scope = new Scope(null);
+    scope.loadFunctions(Thread.currentThread().getContextClassLoader());
+    scope.setValue(SCOPE_NAME, mapper.valueToTree(filtered));
+    return scope;
+  }
 }
