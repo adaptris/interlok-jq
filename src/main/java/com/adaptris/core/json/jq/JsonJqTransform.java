@@ -70,6 +70,8 @@ public class JsonJqTransform extends ServiceImp {
 
   public JsonJqTransform() {
     super();
+    // Explicitly here for XStream; because who knows, the compiler may one
+    // day "decide to change" the default behaviour.
   }
 
   @Override
@@ -92,12 +94,11 @@ public class JsonJqTransform extends ServiceImp {
     catch (Exception e) {
       throw ExceptionHelper.wrapServiceException(e);
     }
-    finally {
-    }
   }
 
   @Override
   public void prepare() throws CoreException {
+    // Nothing to do
   }
 
   @Override
@@ -112,6 +113,7 @@ public class JsonJqTransform extends ServiceImp {
 
   @Override
   protected void closeService() {
+    // Nothing to do
   }
 
   public DataInputParameter<String> getQuerySource() {
