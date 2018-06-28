@@ -68,7 +68,7 @@ dependencies {
   compile ("com.adaptris:adp-core:$adpCoreVersion") { changing= true}
   compile ("com.adaptris:interlok-common:$adpCoreVersion") { changing= true}
   compile ("org.slf4j:slf4j-api:$slf4jVersion")
-  compile ("com.fasterxml.jackson.core:jackson-databind:2.8.10")
+  compile ("com.fasterxml.jackson.core:jackson-databind:2.8.11.1")
   compile ("net.thisptr:jackson-jq:0.0.8")
 
   testCompile ('junit:junit:4.12')
@@ -109,6 +109,8 @@ task generateVersion {
     ant.propertyfile(file: versionFile) {
       entry(key: 'component.name', value: componentName)
       entry(key: 'build.version', value: releaseVersion)
+      entry(key: 'groupId', value: "com.adaptris")
+      entry(key: 'artifactId', value: project.name)
       entry(key: 'build.date', value: new Date().format('yyyy-MM-dd'))
     }
   }
@@ -165,6 +167,11 @@ publishing {
         asNode().appendNode("description", "Transform JSON using JQ style syntax")
         def properties = asNode().appendNode("properties")
         properties.appendNode("target", "3.7.0+")
+        properties.appendNode("tags", "json,jq")
+        properties.appendNode("license", "false")
+        properties.appendNode("externalUrl", "https://github.com/eiiches/jackson-jq")
+
+
       }
     }
   }
