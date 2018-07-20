@@ -69,7 +69,7 @@ dependencies {
   compile ("com.adaptris:interlok-core:$interlokCoreVersion") { changing= true}
   compile ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
   compile ("org.slf4j:slf4j-api:$slf4jVersion")
-  compile ("com.fasterxml.jackson.core:jackson-databind:2.8.11.1")
+  compile ("com.fasterxml.jackson.core:jackson-databind:2.9.6")
   compile ("net.thisptr:jackson-jq:0.0.8")
 
   testCompile ('junit:junit:4.12')
