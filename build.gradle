@@ -34,15 +34,9 @@ def versionDir = "$buildDir/version"
 
 // In this section you declare where to find the dependencies of your project
 repositories {
+  jcenter()
   maven { url "$defaultNexusRepo" }
   maven { url "https://development.adaptris.net/nexus/content/groups/public" }
-  maven {
-    credentials {
-      username repoUsername
-      password repoPassword
-    }
-    url "https://development.adaptris.net/nexus/content/groups/private"
-  }
   maven { url "https://development.adaptris.net/nexus/content/repositories/snapshots" }
   maven { url "https://development.adaptris.net/nexus/content/repositories/releases" }
 }
@@ -59,6 +53,7 @@ configurations {
   all*.exclude group: 'net.sf.saxon', module: 'saxon'
   all*.exclude group: 'org.codehaus.woodstox'
   all*.exclude group: 'org.eclipse.jetty.orbit', module: 'javax.mail.glassfish'
+  all*.exclude group: 'com.fasterxml.woodstox'
 }
 
 configurations.all {
@@ -71,6 +66,7 @@ dependencies {
   compile ("org.slf4j:slf4j-api:$slf4jVersion")
   compile ("com.fasterxml.jackson.core:jackson-databind:2.9.6")
   compile ("net.thisptr:jackson-jq:0.0.9")
+  annotationProcessor ("com.adaptris:interlok-core-apt:$interlokCoreVersion") { changing= true}
 
   testCompile ('junit:junit:4.12')
   testCompile ("com.adaptris:interlok-stubs:$interlokCoreVersion") { changing= true}
@@ -129,7 +125,7 @@ javadoc {
 }
 
 jacoco {
-  toolVersion="0.7.9"
+  toolVersion="0.8.1"
 }
 
 jacocoTestReport {
