@@ -165,6 +165,7 @@ publishing {
       artifact examplesJar { classifier "examples" }
 
       pom.withXml {
+        asNode().appendNode("name", componentName)
         asNode().appendNode("description", "Transform JSON using JQ style syntax")
         def properties = asNode().appendNode("properties")
         properties.appendNode("target", "3.7.0+")
