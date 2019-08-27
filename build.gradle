@@ -24,8 +24,8 @@ ext {
   componentName='Interlok/JSON+JQ integration'
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
-  slf4jVersion = '1.7.26'
-  log4j2Version = '2.11.2'
+  slf4jVersion = '1.7.27'
+  log4j2Version = '2.12.1'
 }
 
 if (JavaVersion.current().isJava8Compatible()) {
@@ -72,7 +72,7 @@ dependencies {
   compile ("com.adaptris:interlok-core:$interlokCoreVersion") { changing= true}
   compile ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
   compile ("org.slf4j:slf4j-api:$slf4jVersion")
-  compile ("com.fasterxml.jackson.core:jackson-databind:2.9.9")
+  compile ("com.fasterxml.jackson.core:jackson-databind:2.9.9.3")
   compile ("net.thisptr:jackson-jq:0.0.10")
   annotationProcessor ("com.adaptris:interlok-core-apt:$interlokCoreVersion") { changing= true}
 
