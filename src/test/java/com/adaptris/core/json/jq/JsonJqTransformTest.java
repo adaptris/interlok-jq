@@ -1,7 +1,10 @@
 package com.adaptris.core.json.jq;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import java.util.EnumSet;
-
+import org.junit.Test;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageFactory;
 import com.adaptris.core.MetadataElement;
@@ -29,10 +32,11 @@ public class JsonJqTransformTest extends ServiceCase {
   private Configuration jsonConfig = new Configuration.ConfigurationBuilder().jsonProvider(new JsonSmartJsonProvider())
       .mappingProvider(new JacksonMappingProvider()).options(EnumSet.noneOf(Option.class)).build();
 
-  public JsonJqTransformTest(String name) {
-    super(name);
+  @Override
+  public boolean isAnnotatedForJunit4() {
+    return true;
   }
-
+  @Test
   public void testService() throws Exception {
     JsonJqTransform service = new JsonJqTransform().withQuerySource(new ConstantDataInputParameter(SAMPLE_QUERY));
     AdaptrisMessage msg = AdaptrisMessageFactory.getDefaultInstance()
@@ -46,6 +50,7 @@ public class JsonJqTransformTest extends ServiceCase {
     assertNotNull(ctx.read("$.status-id"));
   }
 
+  @Test
   public void testService_WithMetadata() throws Exception {
     JsonJqTransform service = new JsonJqTransform().withQuerySource(new ConstantDataInputParameter(METADATA_QUERY))
         .withMetadataFilter(new NoOpMetadataFilter());
