@@ -92,7 +92,7 @@ dependencies {
   compile ("com.adaptris:interlok-core:$interlokCoreVersion") { changing= true}
   compile ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
   compile ("org.slf4j:slf4j-api:$slf4jVersion")
-  compile ("com.fasterxml.jackson.core:jackson-databind:2.10.2")
+  compile ("com.fasterxml.jackson.core:jackson-databind:2.10.3")
   compile ("net.thisptr:jackson-jq:0.0.12")
   annotationProcessor ("com.adaptris:interlok-core-apt:$interlokCoreVersion") { changing= true}
 
